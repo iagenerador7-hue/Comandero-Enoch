@@ -1,0 +1,27 @@
+name: Compilar APK con Buildozer
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Compilar con Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          command: buildozer android debug
+          buildozer_version: stable
+
+      - name: Subir APK generado como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-generado
+          path: ${{ steps.buildozer.outputs.filename }}
